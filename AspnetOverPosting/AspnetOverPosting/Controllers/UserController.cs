@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AspnetOverPosting.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,7 +31,7 @@ namespace AspnetOverPosting.Controllers
         // POST: User/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(UserModel model)
         {
             try
             {
@@ -40,7 +41,7 @@ namespace AspnetOverPosting.Controllers
             }
             catch
             {
-                return View();
+                return View(model);
             }
         }
 
