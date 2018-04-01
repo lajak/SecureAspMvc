@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using AspnetOverPosting.Models;
+using AspnetOverPosting.ViewModels;
 
 namespace AspnetOverPosting
 {
@@ -50,6 +51,7 @@ namespace AspnetOverPosting
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }

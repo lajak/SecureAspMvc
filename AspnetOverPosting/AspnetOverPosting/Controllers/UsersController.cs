@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AspnetOverPosting.Models;
+using AspnetOverPosting.ViewModels;
 
 namespace AspnetOverPosting.Controllers
 {
@@ -53,15 +54,23 @@ namespace AspnetOverPosting.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Firstname,Lastname,Role,CreatedDate")] User user)
+        public async Task<IActionResult> Create(CreateUserViewModel user)
         {
+            var dbUser = new User();
+
+            if (!await TryUpdateModelAsync(dbUser))
+                return NotFound();
+
             if (ModelState.IsValid)
             {
-                _context.Add(user);
+                dbUser.LastUpdatedDate = DateTime.Now;
+                dbUser.CreatedDate = dbUser.LastUpdatedDate;
+
+                _context.Add(dbUser);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(dbUser);
         }
 
         // GET: Users/Edit/5
@@ -85,18 +94,27 @@ namespace AspnetOverPosting.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Firstname,Lastname,Role,CreatedDate")] User user)
+        public async Task<IActionResult> Edit(int id, CreateUserViewModel user)
         {
             if (id != user.Id)
             {
                 return NotFound();
             }
+            var dbUser = await _context.UserModel.SingleOrDefaultAsync(m => m.Id == id);
+            if (dbUser == null)
+            {
+                return NotFound();
+            }
+
+            if (!await TryUpdateModelAsync(dbUser))
+                return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(user);
+                    dbUser.LastUpdatedDate = DateTime.Now();
+                    _context.Update(dbUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -112,7 +130,9 @@ namespace AspnetOverPosting.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+
+
+            return View(dbUser);
         }
 
         // GET: Users/Delete/5

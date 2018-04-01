@@ -11,5 +11,6 @@ namespace AspnetOverPosting.ViewModels
         public string Firstname { get; set; }
         public string Lastname { get; set; }
         public string Role { get; set; }
+        public DateTime LastUpdatedDate { get; set; }
     }
 }
