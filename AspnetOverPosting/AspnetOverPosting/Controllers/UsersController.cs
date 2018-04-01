@@ -113,7 +113,7 @@ namespace AspnetOverPosting.Controllers
             {
                 try
                 {
-                    dbUser.LastUpdatedDate = DateTime.Now();
+                    dbUser.LastUpdatedDate = DateTime.Now;
                     _context.Update(dbUser);
                     await _context.SaveChangesAsync();
                 }
